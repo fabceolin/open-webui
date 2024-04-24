@@ -1,0 +1,111 @@
+nameOverride: ""
+
+ollama:
+  externalHost: ""
+  annotations: {}
+  podAnnotations: {}
+  replicaCount: 1
+  image:
+    repository: ollama/ollama
+    tag: latest
+    pullPolicy: Always
+  resources:
+    limits:
+      nvidia.com/gpu: "6"
+    requests:
+      nvidia.com/gpu: "6"
+  ingress:
+    enabled: true
+    class: ""
+    # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    annotations: {}
+  hosts:
+  - host: ollama.ulevel.com
+    paths:
+      - path: /
+        pathType: Prefix
+    host: ""
+    tls: false
+    existingSecret: ""
+  persistence:
+    enabled: true
+    size: 30Gi
+    existingClaim: ""
+    accessModes:
+    - ReadWriteOnce
+    storageClass: ""
+    selector: {}
+    annotations: {}
+  nodeSelector: {}
+  # -- If using a special runtime container such as nvidia, set it here.
+  runtimeClassName: "nvidia"
+  extraEnv:
+  - name: OLLAMA_DEBUG
+    value: "1"
+  - name: CUDA_VISIBLE_DEVICES
+    value: "0,1,2,3,4,5"
+
+  tolerations:
+  - key: nvidia.com/gpu
+    operator: Exists
+    effect: NoSchedule
+  service:
+    type: ClusterIP
+    annotations: {}
+    port: 80
+    containerPort: 11434
+  gpu:
+    # -- Enable additional ENV values to help Ollama discover GPU usage
+    enabled: true
+    type: 'nvidia'
+    number: 6
+  models:
+    - llama3
+    #    - llama3:70b-instruct-q6_K
+    #    - meditron:70b-q5_1
+
+webui:
+  annotations: {}
+  podAnnotations: {}
+  replicaCount: 1
+  image:
+    repository: ghcr.io/open-webui/open-webui
+    tag: ""
+    pullPolicy: Always
+  resources: {}
+  runtimeClassName: "nvidia"
+  ingress:
+    enabled: true
+    class: ""
+    # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    annotations: {}
+  hosts:
+  - host: webui.ulevel.com
+    paths:
+      - path: /
+        pathType: Prefix
+    host: ""
+    tls: false
+    existingSecret: ""
+  persistence:
+    enabled: true
+    size: 2Gi
+    existingClaim: ""
+    # -- If using multiple replicas, you must update accessModes to ReadWriteMany
+    accessModes:
+    - ReadWriteOnce
+    storageClass: ""
+    selector: {}
+    annotations: {}
+  nodeSelector: {}
+  tolerations: []
+  service:
+    type: ClusterIP
+    annotations: {}
+    port: 80
+    containerPort: 8080
+    nodePort: ""
+    labels: {}
+    loadBalancerClass: "" 
