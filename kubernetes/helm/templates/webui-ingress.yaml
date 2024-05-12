@@ -29,5 +29,5 @@ spec:
           service:
             name: {{ include "open-webui.name" . }}
             port:
-              name: http
+              number: 80
 {{- end }}
