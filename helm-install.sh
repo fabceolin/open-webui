@@ -1,1 +1,1 @@
-helm  upgrade -f values.yaml open-webui ./open-webui-*.tgz
+helm  upgrade -f values.yaml open-webui kubernetes/helm/
