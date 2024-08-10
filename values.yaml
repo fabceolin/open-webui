@@ -49,7 +49,7 @@ ollama:
   #  - llama2
   #  - mistral
   models:
-    - llama3:70b-instruct-q6_K
+  - llama3.1:70b-instruct-q4_K_M
 
   # -- Add insecure flag for pulling at container startup
   insecure: false
